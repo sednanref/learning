@@ -1,0 +1,11 @@
+{
+  "name": "fluxible-isomorphic-app",
+  "version": "1.0.0",
+  "description": "Tutorial to learn Fluxible.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luis D. Fernandes Rotger",
+  "license": "ISC"
+}
