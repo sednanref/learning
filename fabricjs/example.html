@@ -28,8 +28,19 @@
 
 	fabric.Image.fromURL('random.gif', function (img) {
 		canvas.add(img);
+		var i = 5;
+			img.animate('left', '+=100', {
+				onChange: canvas.renderAll.bind(canvas),
+				duration: 1000,
+				easing: fabric.util.ease.easeOutBounce
+			});
+			img.animate('angle', '+=5', {
+				onChange: canvas.renderAll.bind(canvas),
+				duration: 1000
+			});
+
 	});
-	
+
 </script>
 </body>
 
