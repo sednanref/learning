@@ -24,7 +24,12 @@
 		height: 200
 	})
 
-	canvas.add(rect);
+	canvas.add(rect); 
+
+	fabric.Image.fromURL('random.gif', function (img) {
+		canvas.add(img);
+	});
+	
 </script>
 </body>
 
