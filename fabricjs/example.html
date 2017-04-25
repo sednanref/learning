@@ -9,8 +9,11 @@
 
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.11/fabric.js"></script>
+<script
+	src="filesaver.min.js"></script>
 
 <canvas id="c" width="800" height="800"></canvas>
+<input id="b" type="button" value="Save as Image">
 
 <script type="text/javascript">
 	
@@ -25,7 +28,7 @@
 	})
 
 	canvas.add(rect); 
-
+	/*
 	fabric.Image.fromURL('random.gif', function (img) {
 		canvas.add(img);
 		var i = 5;
@@ -41,6 +44,15 @@
 			img.on('scaling', function () {
 				console.log('scaling!!'); 
 			})
+	});
+	*/
+	$("#b").click(function() {
+		console.log('ola k ase0');
+		$("#c").get(0).toBlob(function(blob){
+			console.log('ola k ase');
+			saveAs(blob, "file.png");
+			console.log('ola k ase2');
+		}); 
 	});
 
 </script>
