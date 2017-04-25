@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.11/fabric.js"></script>
+
+<canvas id="c" width="800" height="800"></canvas>
+
+<script type="text/javascript">
+	
+	var canvas = new fabric.Canvas('c');
+
+	var rect = new fabric.Rect({
+		left: 150,
+		top: 150,
+		fill: 'red',
+		width: 200,
+		height: 200
+	})
+
+	canvas.add(rect);
+</script>
+</body>
+
+
+
+</html>
