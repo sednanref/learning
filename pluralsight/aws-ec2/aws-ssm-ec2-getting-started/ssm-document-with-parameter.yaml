@@ -1,0 +1,21 @@
+schemaVersion: '2.2'
+description: Get Airport Information
+parameters:
+  airportCode:
+    type: String
+    description: IATA Code of airport to query
+    displayType: textfield
+    default: MEL
+  appId:
+    type: String
+    description: API app ID
+    displayType: textfield
+    default: "{{ssm:/api/airport_app_id}}"
+mainSteps:
+- action: aws:runShellScript
+  name: runShellScript
+  inputs:
+    runCommand:
+      - 'APPKEY=$(aws ssm get-parameters --names /api/airport_app_key --with-decryption --query "Parameters[0].Value" --output text --region ap-southeast-2)'
+      - 'curl -X GET --header "Accept: application/json" --header "ResourceVersion: v1" "https://api.schiphol.nl/public-flights/destinations/{{ airportCode }}?app_id={{ appId }}&app_key=${APPKEY}"'
+    timeoutSeconds: '600'

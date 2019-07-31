@@ -1,0 +1,13 @@
+schemaVersion: '2.2'
+description: Install AWS CLI on Linux
+mainSteps:
+- action: aws:runShellScript
+  name: runShellScript
+  inputs:
+    runCommand:
+      - "curl -O https://bootstrap.pypa.io/get-pip.py"
+      - 'python get-pip.py'
+      - 'pip --version'
+      - 'pip install awscli --upgrade'
+      - 'aws --version'
+    timeoutSeconds: '600'

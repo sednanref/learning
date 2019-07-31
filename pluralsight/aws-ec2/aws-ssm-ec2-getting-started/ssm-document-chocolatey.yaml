@@ -1,0 +1,12 @@
+
+schemaVersion: '2.2'
+description: Install Chocolatey
+mainSteps:
+- action: aws:runPowerShellScript
+  name: runPowerShellScript
+  inputs:
+    runCommand:
+    - 
+      # Download and install Chocolatey
+      Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+    timeoutSeconds: '600'

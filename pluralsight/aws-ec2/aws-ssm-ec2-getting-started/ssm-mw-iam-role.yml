@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: IAM role for Maintenance Window to do patching
+Resources:
+  mwRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ssm.amazonaws.com
+                - ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMMaintenanceWindowRole
+      Path: '/'
+Outputs:
+  mwRoleArn:
+    Value:
+      'Fn::GetAtt':
+        - mwRole
+        - Arn
+    Description: IAM Role for SSM Patching
+    Export:
+      Name: mw-iam-role

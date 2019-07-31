@@ -1,0 +1,125 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  MyIP:
+    Type: String
+    Description: Your local external IP. Check http://www.whatsmyip.org/ for this.
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.31.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: InternetGateway
+  SubnetPublic:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock: 172.31.0.0/20
+      MapPublicIpOnLaunch: true
+  SubnetApplication:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock: 172.31.16.0/20
+      MapPublicIpOnLaunch: false
+  SubnetData:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPC
+      CidrBlock: 172.31.32.0/20
+      MapPublicIpOnLaunch: false
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: InternetGateway
+      RouteTableId:
+        Ref: RouteTable
+  SubnetPublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: SubnetPublic
+  SubnetApplicationRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: SubnetApplication
+  SubnetDataRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: SubnetData
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "Management rules"
+      GroupDescription: "RDP and SSH in, everything out."
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 
+            Fn::Sub: "${MyIP}/32"
+        - IpProtocol: tcp
+          FromPort: '3389'
+          ToPort: '3389'
+          CidrIp: 
+            Fn::Sub: "${MyIP}/32"
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+Outputs:
+  SecurityGroup:
+    Value: 
+      Ref: SecurityGroup
+    Description: Management Security Group
+    Export:
+      Name: 'core-management-securitygroup'
+  SubnetPublic:
+    Value: 
+      Ref: SubnetPublic
+    Description: Public Subnet
+    Export:
+      Name: 'core-subnet-public'
+  SubnetApplication:
+    Value: 
+      Ref: SubnetApplication
+    Description: Application Subnet
+    Export:
+      Name: 'core-subnet-application'
+  SubnetData:
+    Value: 
+      Ref: SubnetData
+    Description: Data subnet
+    Export:
+      Name: 'core-subnet-data'

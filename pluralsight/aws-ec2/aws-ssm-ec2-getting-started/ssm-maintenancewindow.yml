@@ -1,0 +1,20 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: SSM Maintenance Window for Server 2016 patching
+Resources:
+  mwPatch2016:
+    Type: "AWS::SSM::MaintenanceWindow"
+    Properties:
+      Description: Maintenance Window to patch Windows Server 2016 daily at 10pm
+      AllowUnassociatedTargets: true
+      Cutoff: 1
+      Schedule: cron(0 11 ? * * *)
+      Duration: 2
+      Name: 2016-every-day-at-10-pm
+Outputs:
+  mwPatch2016:
+    Value:
+      Ref: mwPatch2016
+    Description: Maintenance Window for Server 2016 patching
+    Export:
+      Name: mw-patch-2016

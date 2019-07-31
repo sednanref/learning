@@ -1,0 +1,21 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: This stack deploys an S3 bucket that can be used for SSM Run Commands to output to
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 
+        Fn::Sub: 'ssm-output-${AWS::StackName}'
+      Tags:
+        - Key: Owner
+          Value: dave
+        - Key: application
+          Value: ssm
+Outputs:
+  S3:
+    Value: 
+      Ref: S3Bucket
+    Description: S3 Bucketname for SSM Run Command output
+    Export: 
+      Name: 'ssm-output-s3bucket'

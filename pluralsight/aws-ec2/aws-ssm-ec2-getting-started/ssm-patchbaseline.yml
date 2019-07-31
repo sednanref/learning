@@ -1,0 +1,31 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: SSM Patch Manager baseline for Windows Server 2016
+Resources:
+  w2k16baseline:
+    Type: "AWS::SSM::PatchBaseline"
+    Properties:
+      Name: Windows2016baseline
+      OperatingSystem: WINDOWS
+      Description: Windows 2016 patch baseline installing critical and security updates
+      ApprovedPatchesComplianceLevel: MEDIUM
+      PatchGroups:
+        - windowsServer2016
+      ApprovalRules:
+        PatchRules:
+          -
+            PatchFilterGroup:
+              PatchFilters:
+                - Key: PRODUCT
+                  Values:
+                    - WindowsServer2016
+                - Key: CLASSIFICATION
+                  Values:
+                    - CriticalUpdates
+                    - SecurityUpdates
+                - Key: MSRC_SEVERITY
+                  Values:
+                    - Critical
+                    - Important
+            ApproveAfterDays: 1
+            ComplianceLevel: MEDIUM

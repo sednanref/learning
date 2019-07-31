@@ -1,0 +1,45 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Stack that applies patches to instances via Maintenance Window
+Resources:
+  myTarget:
+    Type: "AWS::SSM::MaintenanceWindowTarget"
+    Properties:
+      OwnerInformation: "dave@globomantics.com"
+      Description: "All Server 2016"
+      WindowId: 
+        Fn::ImportValue: mw-patch-2016
+      ResourceType: INSTANCE
+      Targets:
+        -
+          Key: tag:Patch Group
+          Values:
+            - windowsServer2016
+  patchingTask:
+    Type: "AWS::SSM::MaintenanceWindowTask"
+    Properties:
+      MaxErrors: 1
+      Description: Task that applies patches to instances
+      ServiceRoleArn:
+        Fn::ImportValue: mw-iam-role
+      Priority: 1
+      MaxConcurrency: 10
+      Targets:
+        -
+          Key: "WindowTargetIds"
+          Values:
+            - !Ref myTarget
+      TaskArn: AWS-RunPatchBaseline
+      TaskInvocationParameters:
+        MaintenanceWindowRunCommandParameters: 
+          Parameters:
+            Operation:
+              - Install
+      WindowId:
+        Fn::ImportValue: mw-patch-2016
+      TaskType: RUN_COMMAND
+      LoggingInfo:
+        S3Bucket: ssm-output-globomantics-ssm-bucket
+        Region: 
+          Fn::Sub: ${AWS::Region}
+        S3Prefix: ssm-patching
